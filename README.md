@@ -2,7 +2,7 @@
 
 一个基于真实职业经历制作的个人介绍网站，内容包括个人简介、技术栈、工作经历、教育认证和联系方式。
 
-- 网站地址：<https://shichao0503.github.io/mynote/>（需先在仓库设置中启用 Pages）
+- 网站地址：<https://shichao0503.github.io/mynote/>
 - 从零学习：[制作过程与修改指南](docs/制作过程.md)
 - 本次实施：[实操记录](docs/实操记录.md)
 
@@ -36,6 +36,8 @@ mynote/
 ## 发布配置
 
 仓库 **Settings → Pages → Build and deployment**：
+
+本仓库已完成以下设置，首次 Pages 发布工作流已成功；下列步骤供学习或重建时参考。
 
 1. Source：`Deploy from a branch`
 2. Branch：`main`
