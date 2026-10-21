@@ -1,10 +1,10 @@
-// 零依赖本地预览：在仓库根目录执行 node scripts/serve.mjs。
+// 零依赖本地预览：在仓库根目录执行 node personal_homepage/scripts/serve.mjs。
 import { createServer } from "node:http";
 import { readFile, stat } from "node:fs/promises";
 import { resolve, extname, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const root = fileURLToPath(new URL("../", import.meta.url));
+const root = fileURLToPath(new URL("../../", import.meta.url));
 const port = Number(process.env.PORT || 4321);
 const types = {
   ".html": "text/html; charset=utf-8",
@@ -33,8 +33,18 @@ createServer(async (request, response) => {
       response.end("Forbidden");
       return;
     }
-    if ((await stat(target)).isDirectory())
+    if ((await stat(target)).isDirectory()) {
+      // 子目录必须保留结尾的 /，避免相对资源路径指向上一级。
+      if (!pathname.endsWith("/")) {
+        const originalUrl = new URL(request.url, "http://localhost");
+        response.writeHead(302, {
+          Location: originalUrl.pathname + "/" + originalUrl.search,
+        });
+        response.end();
+        return;
+      }
       target = resolve(target, "index.html");
+    }
     const body = await readFile(target);
     response.writeHead(200, {
       "Content-Type": types[extname(target)] || "application/octet-stream",
@@ -46,6 +56,6 @@ createServer(async (request, response) => {
     response.end("文件不存在");
   }
 }).listen(port, "127.0.0.1", () => {
-  console.log(`Local: http://127.0.0.1:${port}/mynote/`);
+  console.log(`Local: http://127.0.0.1:${port}/mynote/personal_homepage/`);
   console.log("按 Ctrl+C 停止预览。");
 });
